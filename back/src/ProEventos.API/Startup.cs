@@ -5,7 +5,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using ProEventos.Application.Interfaces;
+using ProEventos.Application.Services;
 using ProEventos.Persistence;
+using ProEventos.Persistence.Migrations;
 
 namespace ProEventos.API
 {
@@ -26,6 +29,9 @@ namespace ProEventos.API
             );
             services.AddCors();
             services.AddControllers();
+            services.AddScoped<IProEventoBase, ProEventoBase>();
+            services.AddScoped<IEventoService, EventoService>();
+            services.AddScoped<IEventoRepository, EventoRepository>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ProEventos.API", Version = "v1" });

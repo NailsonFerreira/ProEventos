@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using ProEventos.Application.Interfaces;
 using ProEventos.Domain.Models;
 using ProEventos.Persistence;
 
@@ -13,29 +14,93 @@ namespace ProEventos.API.Controllers
     [Route("[controller]")]
     public class EventoController : ControllerBase
     {
-        private readonly ProEventosContext context;
-        public EventoController(ProEventosContext context)
+        private readonly IEventoService service;
+
+        public EventoController(IEventoService service)
         {
-            this.context = context;
+            this.service = service;
 
         }
 
         [HttpGet("{id}")]
-        public Evento Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            return context.Eventos.Where(x=>x.Id==id).FirstOrDefault();
+
+            try
+            {
+                var eventos = await service.GetEventoByIdAsync(id);
+                if(eventos==null) return NotFound("Nenhum evento encontrado");
+                return Ok(eventos);
+            }
+            catch (Exception e)
+            {
+                
+               return BadRequest($"Ocorreu um erro. Error{e.Message} ");
+            }
         }
 
         [HttpGet]
-        public IEnumerable<Evento> Get()
+        public  async Task<IActionResult> Get()
         {
-            return context.Eventos;
+            try
+            {
+                var eventos = await service.GetAllEventosAsync();
+                if(eventos==null) return NotFound("Nenhum evento encontrado");
+                return Ok(eventos);
+            }
+            catch (Exception e)
+            {
+                
+               return BadRequest($"Ocorreu um erro. Error{e.Message} ");
+            }
         }
         
         [HttpPost]
-        public IEnumerable<Evento> Post([FromBodyAttribute] Evento evento)
+        public async Task<IActionResult> Post([FromBodyAttribute] Evento evento)
         {
-            return context.Eventos;
+            try
+            {
+                var eventos = await service.Add(evento);
+                if(eventos==null) return BadRequest("Erro ao salvar evento");
+                return Ok(eventos);
+            }
+            catch (Exception e)
+            {
+                
+               return BadRequest($"Ocorreu um erro. Error{e.Message} ");
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Update(int id)
+        {
+            try
+            {
+                 var ok = await service.Delete(id);
+                if(!ok) return BadRequest("Erro ao deletar evento");
+                return Ok("Deletado");
+            }
+            catch (Exception e)
+            {
+                
+               return BadRequest($"Ocorreu um erro. Error{e.Message} ");
+            }
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int id, [FromBodyAttribute] Evento evento)
+        {
+            try
+            {
+                var eventos = await service.Update(id, evento);
+                if(eventos==null) return BadRequest("Erro ao atualizar evento");
+                return Ok(eventos);
+            }
+            catch (Exception e)
+            {
+                
+               return BadRequest($"Ocorreu um erro. Error{e.Message} ");
+            }
         }
     }
 }

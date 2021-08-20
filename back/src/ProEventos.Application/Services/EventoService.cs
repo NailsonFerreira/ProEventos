@@ -40,7 +40,7 @@ namespace ProEventos.Application.Services
             {
                 var entity = await eventoRepository.GetEventoByIdAsync(eventoId);
                 if (entity == null) throw new Exception("Evento não encontrado");
-           
+
                 baseRepository.Delete<Evento>(entity);
                 return await baseRepository.SaveChangesAsync();
             }
@@ -51,19 +51,49 @@ namespace ProEventos.Application.Services
             }
         }
 
-        public Task<Evento[]> GetAllEventosAsync(bool includePalestrantes = false)
+        public async Task<Evento[]> GetAllEventosAsync(bool includePalestrantes = false)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                var eventos = await eventoRepository.GetAllEventosAsync(includePalestrantes);
+                if (eventos == null) return null;
+                return eventos;
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message);
+            }
         }
 
-        public Task<Evento[]> GetAllEventosByTemaAsync(string tema, bool includePalestrantes = false)
+        public async Task<Evento[]> GetAllEventosByTemaAsync(string tema, bool includePalestrantes = false)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                var eventos = await eventoRepository.GetAllEventosByTemaAsync(tema, includePalestrantes: includePalestrantes);
+                if (eventos == null) return null;
+                return eventos;
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message);
+            }
         }
 
-        public Task<Evento> GetEventoByIdAsync(int eventoId, bool includePalestrantes = false)
+        public async Task<Evento> GetEventoByIdAsync(int eventoId, bool includePalestrantes = false)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                var evento = await eventoRepository.GetEventoByIdAsync(eventoId, includePalestrantes: includePalestrantes);
+                if (evento == null) return null;
+                return evento;
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message);
+            }
         }
 
         public async Task<Evento> Update(int id, Evento evento)

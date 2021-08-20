@@ -26,7 +26,7 @@ namespace ProEventos.Persistence
         }
 
         
-        public async Task<bool> SaveChangesAsync<T>(T entity) where T : class
+        public async Task<bool> SaveChangesAsync() 
         {
             return (await context.SaveChangesAsync()) > 0;
         }
