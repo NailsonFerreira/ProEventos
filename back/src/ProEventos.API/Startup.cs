@@ -28,7 +28,8 @@ namespace ProEventos.API
                 context => context.UseSqlite(Configuration.GetConnectionString("Default"))
             );
             services.AddCors();
-            services.AddControllers();
+            services.AddControllers()
+            .AddNewtonsoftJson();
             services.AddScoped<IProEventoBase, ProEventoBase>();
             services.AddScoped<IEventoService, EventoService>();
             services.AddScoped<IEventoRepository, EventoRepository>();

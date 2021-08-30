@@ -71,8 +71,8 @@ namespace ProEventos.API.Controllers
             }
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Update(int id)
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
@@ -87,8 +87,8 @@ namespace ProEventos.API.Controllers
             }
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> Delete(int id, [FromBodyAttribute] Evento evento)
+        [HttpPut]
+        public async Task<IActionResult> Update(int id, [FromBodyAttribute] Evento evento)
         {
             try
             {
