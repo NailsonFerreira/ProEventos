@@ -39,6 +39,23 @@ namespace ProEventos.API.Controllers
             }
         }
 
+        [HttpGet("{tema}/tema")]
+        public async Task<IActionResult> GetByTema(string tema)
+        {
+
+            try
+            {
+                var eventos = await service.GetAllEventosByTemaAsync(tema, true);
+                if(eventos==null) return NotFound("Nenhum evento encontrado");
+                return Ok(eventos);
+            }
+            catch (Exception e)
+            {
+                
+               return BadRequest($"Ocorreu um erro. Error{e.Message} ");
+            }
+        }
+
         [HttpGet]
         public  async Task<IActionResult> Get()
         {

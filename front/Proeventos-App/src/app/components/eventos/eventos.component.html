@@ -1,13 +1,9 @@
-<h2>Eventos</h2>
+<app-titulo [titulo]="'Eventos'"></app-titulo>
 <hr>
-<div  class="form-inline">
+<div class="form-inline">
   <div class="form-group mb-2">
     <label class="mr-2">Filtro: </label>
-  <input
-    type="text"
-    class="form-control mr-2"
-    placeholder="Buscar"
-    [(ngModel)]="search">
+    <input type="text" class="form-control mr-2" placeholder="Buscar" [(ngModel)]="search">
   </div>
 </div>
 <table class="table table-striped">
@@ -15,6 +11,7 @@
     <tr>
       <th>
         <button type="button" class="btn btn-outline-light btn-sm" (click)="setShowImages()">
+          <i class="{{showImage?'fa fa-eye':'fa fa-eye-slash'}}"></i>
           {{showImage?'Ocultar':'Exibir'}}
         </button>
       </th>
@@ -25,6 +22,8 @@
       <th>Quantidade de pessoas</th>
       <th>Lote</th>
       <th>Opções</th>
+
+
     </tr>
   </thead>
   <tbody *ngIf="eventosFilter && eventosFilter.length">
@@ -33,15 +32,19 @@
         <img [collapse]="!showImage" [isAnimated]="true" src="assets/images/{{evento.imagemUrl}}"
           [style.width.px]="widthImg" [style.margin.px]="marginImg">
       </th>
-      <th>{{evento.eventoId}}</th>
+      <th>{{evento.id}}</th>
       <th>{{evento.tema}}</th>
       <th>{{evento.local}}</th>
-      <th>{{evento.dataEvento}}</th>
+      <th>{{evento.dataEvento| DateTimeFormatP}}</th>
       <th>{{evento.quantidadePessoas}}</th>
-      <th>{{evento.lote}}</th>
+      <th>{{evento.lotes[0].nome}}</th>
       <th>
-        <button type="button" class="btn btn-primary btn-sm mr-2">Editar</button>
-        <button type="button" class="btn btn-danger btn-sm">Excluir</button>
+        <button type="button" class="btn btn-primary btn-sm mr-2" tooltip="Editar">
+          <i class="fa fa-edit"></i>
+
+        </button>
+        <button type="button" class="btn btn-danger btn-sm" tooltip="Deletar" (click)="openModal(template)">
+          <i class="fa fa-trash"></i></button>
       </th>
     </tr>
   </tbody>
@@ -53,3 +56,14 @@
     </tr>
   </tfoot>
 </table>
+
+
+
+<ng-template #template>
+  <div class="modal-body text-center">
+    <p>Deseja Excluir o evento?
+    </p>
+    <button type="button" class="btn btn-default" (click)="confirm()">Sim</button>
+    <button type="button" class="btn btn-primary" (click)="decline()">Não</button>
+  </div>
+</ng-template>

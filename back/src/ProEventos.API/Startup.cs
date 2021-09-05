@@ -29,7 +29,9 @@ namespace ProEventos.API
             );
             services.AddCors();
             services.AddControllers()
-            .AddNewtonsoftJson();
+            .AddNewtonsoftJson(
+                XmlConfigurationExtensions=> XmlConfigurationExtensions.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
             services.AddScoped<IProEventoBase, ProEventoBase>();
             services.AddScoped<IEventoService, EventoService>();
             services.AddScoped<IEventoRepository, EventoRepository>();
