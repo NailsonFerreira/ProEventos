@@ -26,7 +26,7 @@ export class EventoDetalheComponent implements OnInit {
       tema: ['',[Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
       qtdPessoas: ['',[Validators.required]],
       imagemUrl: ['',[Validators.required]],
-      telefone: ['',[Validators.required, Validators.minLength(8),]],
+      telefone: ['',[Validators.required, Validators.minLength(8)]],
       email: ['',[Validators.required, Validators.email]],
     });
   }
