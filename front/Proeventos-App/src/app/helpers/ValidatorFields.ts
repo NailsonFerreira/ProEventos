@@ -12,7 +12,7 @@ export class ValidatorFields {
         return null;
       }
 
-      if(control.value !+ matchControl.value){
+      if(control.value != matchControl.value){
         matchControl.setErrors({mustMatch: true});
       } else{
         matchControl.setErrors(null);

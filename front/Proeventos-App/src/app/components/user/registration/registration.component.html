@@ -62,10 +62,13 @@
           <input class="form-control" type="password" formControlName="senha"
             [ngClass]="{'is-invalid': f.senha.errors && f.senha.touched}" placeholder="Digite uma Senha" />
 
-          <div *ngIf="f.senha.errors?.required && f.senha.errors.touched" class="invalid-feedback">
+          <div *ngIf="f.senha.errors?.required && f.senha.touched" class="invalid-feedback">
             Senha é obrigatório
           </div>
-          <div *ngIf="f.senha.errors?.minLength || f.senha.errors?.maxLength && f.senha.errors.touched" class="invalid-feedback">
+          <div *ngIf="f.senha.errors?.maxlength" class="invalid-feedback">
+            A senha precisa ter entre 6 e 10 caracteres
+          </div>
+          <div *ngIf="f.senha.errors?.minlength" class="invalid-feedback">
             A senha precisa ter entre 6 e 10 caracteres
           </div>
         </div>
@@ -75,15 +78,19 @@
           <input class="form-control" type="password" formControlName="confirmeSenha"
             [ngClass]="{'is-invalid': f.confirmeSenha.errors && f.confirmeSenha.touched}"
             placeholder="Confirme a Senha" />
-          <div class="invalid-feedback" *ngIf="f.confirmeSenha.errors?.minLength||f.confirmeSenha.errors?.maxLength && f.confirmeSenha.errors.touched">
-            A senha precisa ter entre 6 e 10 caracteres
-          </div>
-          <div class="invalid-feedback" *ngIf="f.confirmeSenha.errors?.required && f.confirmeSenha.errors.touched">
+            <div *ngIf="f.confirmeSenha.errors?.maxlength" class="invalid-feedback">
+              A senha precisa ter entre 6 e 10 caracteres
+            </div>
+            <div *ngIf="f.confirmeSenha.errors?.minlength" class="invalid-feedback">
+              A senha precisa ter entre 6 e 10 caracteres
+            </div>
+          <div class="invalid-feedback" *ngIf="f.confirmeSenha.errors?.required && f.confirmeSenha.touched">
             Confirmar a senha é obrigatório
           </div>
-          <div class="invalid-feedback" *ngIf="f.confirmeSenha.errors?.MustMatch && f.confirmeSenha.errors.touched">
+          <div class="invalid-feedback" *ngIf="f.confirmeSenha.errors?.mustMatch && f.confirmeSenha.touched">
             Senhas não correspondem
           </div>
+
         </div>
 
       </div>
