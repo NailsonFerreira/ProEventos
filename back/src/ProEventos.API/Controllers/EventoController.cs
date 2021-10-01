@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using ProEventos.Application.DTOs;
 using ProEventos.Application.Interfaces;
 using ProEventos.Domain.Models;
 using ProEventos.Persistence;
@@ -73,11 +74,12 @@ namespace ProEventos.API.Controllers
         }
         
         [HttpPost]
-        public async Task<IActionResult> Post([FromBodyAttribute] Evento evento)
+        public async Task<IActionResult> Post([FromBodyAttribute] EventoDTO eventoDto)
         {
             try
             {
-                var eventos = await service.Add(evento);
+
+                var eventos = await service.Add(eventoDto);
                 if(eventos==null) return BadRequest("Erro ao salvar evento");
                 return Ok(eventos);
             }
@@ -105,7 +107,7 @@ namespace ProEventos.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(int id, [FromBodyAttribute] Evento evento)
+        public async Task<IActionResult> Update(int id, [FromBodyAttribute] EventoDTO evento)
         {
             try
             {
