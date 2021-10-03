@@ -34,8 +34,8 @@ namespace ProEventos.Application.Services
             }
             catch (Exception e)
             {
-
                 throw new Exception(e.Message);
+            
             }
         }
 
