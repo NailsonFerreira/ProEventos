@@ -30,13 +30,13 @@ namespace ProEventos.API.Controllers
             try
             {
                 var eventos = await service.GetEventoByIdAsync(id);
-                if(eventos==null) return NotFound("Nenhum evento encontrado");
+                if (eventos == null) return NoContent();
                 return Ok(eventos);
             }
             catch (Exception e)
             {
-                
-               return BadRequest($"Ocorreu um erro. Error{e.Message} ");
+
+                return BadRequest($"Ocorreu um erro. Error{e.Message} ");
             }
         }
 
@@ -47,32 +47,32 @@ namespace ProEventos.API.Controllers
             try
             {
                 var eventos = await service.GetAllEventosByTemaAsync(tema, true);
-                if(eventos==null) return NotFound("Nenhum evento encontrado");
+                if (eventos == null) return NoContent();
                 return Ok(eventos);
             }
             catch (Exception e)
             {
-                
-               return BadRequest($"Ocorreu um erro. Error{e.Message} ");
+
+                return BadRequest($"Ocorreu um erro. Error{e.Message} ");
             }
         }
 
         [HttpGet]
-        public  async Task<IActionResult> Get()
+        public async Task<IActionResult> Get()
         {
             try
             {
                 var eventos = await service.GetAllEventosAsync();
-                if(eventos==null) return NotFound("Nenhum evento encontrado");
+                if (eventos == null) return NoContent();
                 return Ok(eventos);
             }
             catch (Exception e)
             {
-                
-               return BadRequest($"Ocorreu um erro. Error{e.Message} ");
+
+                return BadRequest($"Ocorreu um erro. Error{e.Message} ");
             }
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> Post([FromBodyAttribute] EventoDTO eventoDto)
         {
@@ -80,13 +80,13 @@ namespace ProEventos.API.Controllers
             {
 
                 var eventos = await service.Add(eventoDto);
-                if(eventos==null) return BadRequest("Erro ao salvar evento");
+                if (eventos == null) return BadRequest("Erro ao salvar evento");
                 return Ok(eventos);
             }
             catch (Exception e)
             {
-                
-               return BadRequest($"Ocorreu um erro. Error{e.Message} ");
+
+                return BadRequest($"Ocorreu um erro. Error{e.Message} ");
             }
         }
 
@@ -95,14 +95,18 @@ namespace ProEventos.API.Controllers
         {
             try
             {
-                 var ok = await service.Delete(id);
-                if(!ok) return BadRequest("Erro ao deletar evento");
+                var eventos = await service.GetEventoByIdAsync(id);
+                if (eventos == null) return NoContent();
+
+
+                var ok = await service.Delete(id);
+                if (!ok) return BadRequest("Erro ao deletar evento");
                 return Ok("Deletado");
             }
             catch (Exception e)
             {
-                
-               return BadRequest($"Ocorreu um erro. Error{e.Message} ");
+
+                return BadRequest($"Ocorreu um erro. Error{e.Message} ");
             }
         }
 
@@ -112,13 +116,13 @@ namespace ProEventos.API.Controllers
             try
             {
                 var eventos = await service.Update(id, evento);
-                if(eventos==null) return BadRequest("Erro ao atualizar evento");
+                if (eventos == null) return BadRequest("Erro ao atualizar evento");
                 return Ok(eventos);
             }
             catch (Exception e)
             {
-                
-               return BadRequest($"Ocorreu um erro. Error{e.Message} ");
+
+                return BadRequest($"Ocorreu um erro. Error{e.Message} ");
             }
         }
     }
