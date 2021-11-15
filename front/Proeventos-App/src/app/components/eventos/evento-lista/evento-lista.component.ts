@@ -12,6 +12,7 @@ import { EventoService } from 'src/app/service/evento.service';
   styleUrls: ['./evento-lista.component.scss']
 })
 export class EventoListaComponent implements OnInit {
+  public eventoId: number = 0;
 
   constructor(
     private eventoService: EventoService,
@@ -52,16 +53,11 @@ export class EventoListaComponent implements OnInit {
           console.log(eventos);
         },
         error: (error: any) => {
-          this.spinner.hide();
           this.toastr.error('Erro ao carregar eventos', "Erro");
-
           console.error(`ERROR GET EVENTOS${JSON.stringify(error)}`);
-        },
-        complete: () => {
-          this.spinner.hide();
         }
       }
-    );
+    ).add(()=>this.spinner.hide());
 
   }
 
@@ -77,16 +73,30 @@ export class EventoListaComponent implements OnInit {
     );
   }
 
-  openModal(template: TemplateRef<any>): void {
+  openModal(event:any, template: TemplateRef<any>, evento:Evento): void {
+    this.eventoId = evento.id;
+    event.stopPropagation();
     this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
-
-
   }
 
   confirm(): void {
     this.modalRef?.hide();
-    this.toastr.success('Hello world!', 'Toastr fun!');
+    this.spinner.show();
+    this.eventoService.deleteEvento(this.eventoId).subscribe(
+      (response:any)=>{
+        if(response.message=='Deletado'){
+          this.toastr.success("Evento deletado com sucesso", 'Deletado');
+          this.getEventos();
+        }
+      },
+      (error:any)=>{
+        console.log(`ERO DELETAR ${JSON.stringify(error)}`);
+        this.toastr.error(`Erro ao deletar evento de id ${this.eventoId}`, 'Erro');
+      },
+    ).add(()=>this.spinner.hide());
   }
+
+
 
   decline(): void {
     this.modalRef?.hide();

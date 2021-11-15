@@ -10,14 +10,14 @@ namespace ProEventos.Application.DTOs
         [Required(ErrorMessage = "O local é obrigatória")]
         public string Local { get; set; }
         [Required(ErrorMessage = "A data é obrigatória")]
-        public string DataEvento { get; set; }
+        public DateTime? DataEvento { get; set; }
         [Required(ErrorMessage = "O tema é obrigatório"),
         StringLength(50, MinimumLength = 3, ErrorMessage = "É preciso haver entre 3 a 50 caracteres")]
         public string Tema { get; set; }
         [Required(ErrorMessage = "Quantidade de pessoas é obrigatório"),
         Range(1, 2000, ErrorMessage = "Quantidade entre 1 e 2000"),
         Display(Name = "Quantidade de pessoas")]
-        public int QuantidadePessoas { get; set; }
+        public int QtdPessoas { get; set; }
         [RegularExpression(@".*\.(gif|jpe?g|bmp|png)$", ErrorMessage = "Url da imagem Inválido") ]
         public string ImagemUrl { get; set; }
         [Required(ErrorMessage = "{0} é obrigatório"),

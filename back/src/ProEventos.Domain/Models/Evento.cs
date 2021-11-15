@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProEventos.Domain.Models
 {
-    [Table("TB_EVENTOS")]
+    //[Table("TB_EVENTOS")]
     public class Evento
     {
         public int Id { get; set; }

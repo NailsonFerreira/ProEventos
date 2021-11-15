@@ -79,9 +79,9 @@ namespace ProEventos.API.Controllers
             try
             {
 
-                var eventos = await service.Add(eventoDto);
-                if (eventos == null) return BadRequest("Erro ao salvar evento");
-                return Ok(eventos);
+                var evento = await service.Add(eventoDto);
+                if (evento == null) return BadRequest("Erro ao salvar evento");
+                return Ok(evento);
             }
             catch (Exception e)
             {
@@ -101,7 +101,7 @@ namespace ProEventos.API.Controllers
 
                 var ok = await service.Delete(id);
                 if (!ok) return BadRequest("Erro ao deletar evento");
-                return Ok("Deletado");
+                return Ok(new { message = "Deletado" });
             }
             catch (Exception e)
             {
