@@ -38,7 +38,9 @@ namespace ProEventos.API
 
             services.AddScoped<IProEventoBase, ProEventoBase>();
             services.AddScoped<IEventoService, EventoService>();
+            services.AddScoped<ILoteService, LoteService>();
             services.AddScoped<IEventoRepository, EventoRepository>();
+            services.AddScoped<ILoteRepository, LoteRepository>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ProEventos.API", Version = "v1" });
