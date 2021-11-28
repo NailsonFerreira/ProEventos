@@ -27,8 +27,9 @@ namespace ProEventos.Application.Services
             {
                 var lote = await loteRepository.GetLoteByIdAsync(eventoId, id);
                 if (lote == null) throw new Exception("Lote não encontrado");
-
-                return true;
+                
+                baseRepository.Delete<Lote>(lote);
+                return await baseRepository.SaveChangesAsync();
             }
             catch (Exception)
             {

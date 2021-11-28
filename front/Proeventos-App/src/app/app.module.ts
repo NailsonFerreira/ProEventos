@@ -30,6 +30,7 @@ import { TituloComponent } from './shared/titulo/titulo.component';
 
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { ptBrLocale } from 'ngx-bootstrap/locale';
+import { LoteService } from './service/lote.service';
 defineLocale('pt-br', ptBrLocale);
 
 
@@ -71,7 +72,7 @@ defineLocale('pt-br', ptBrLocale);
     BsDatepickerModule.forRoot()
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  providers: [EventoService],
+  providers: [EventoService, LoteService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

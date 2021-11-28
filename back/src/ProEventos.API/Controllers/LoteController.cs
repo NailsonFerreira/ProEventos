@@ -38,7 +38,7 @@ namespace ProEventos.API.Controllers
             }
         }
 
-        [HttpDelete("{eventoId}/{loteId}")]
+        [HttpDelete()]
         public async Task<IActionResult> Delete(int eventoId, int loteId)
         {
             try
@@ -57,7 +57,7 @@ namespace ProEventos.API.Controllers
             }
         }
 
-        [HttpPut("eventoId")]
+        [HttpPut()]
         public async Task<IActionResult> Save(int eventoId, [FromBodyAttribute] LoteDTO[] models)
         {
             try
@@ -74,3 +74,5 @@ namespace ProEventos.API.Controllers
         }
     }
 }
+//http://localhost:5000/Lote?eventoId=3
+//http://localhost:5000/lote?eventoId=14
