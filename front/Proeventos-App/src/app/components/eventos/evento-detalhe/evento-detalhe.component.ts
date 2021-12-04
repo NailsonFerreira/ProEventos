@@ -39,6 +39,16 @@ export class EventoDetalheComponent implements OnInit {
     };
   }
 
+  get bsConfigLote(): any {
+    return {
+      isAnimated: true,
+      adaptivePosition: true,
+      dateInputFormat: 'DD/MM/YYYY hh:mm:ss a',
+      containerClass: 'theme-default',
+      showWeekNumbers: false
+    };
+  }
+
   get lotes(): FormArray {
     return this.form.get("lotes") as FormArray;
   }
@@ -155,7 +165,7 @@ export class EventoDetalheComponent implements OnInit {
       this.loteService.saveLotes(this.eventoId, this.form.value.lotes).subscribe(
         {
           next: (lotes: Array<Lote>) => {
-
+            console.log(`Lotes: ${JSON.stringify(lotes)}`);
             this.toast.success('Lotes salvos com sucesso', 'Sucesso');
           },
           error: (error: any) => {
@@ -201,5 +211,13 @@ export class EventoDetalheComponent implements OnInit {
 
   cancelaLoteDelete(): void {
     this.modalRef.hide();
+  }
+
+  mudaValorData(value: Date, indice: number){
+    this.lotes[indice].dataInicio = value;
+  }
+
+  mudaValorDataFim(value: Date, indice: number){
+    this.lotes[indice].dataFim = value;
   }
 }
