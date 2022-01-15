@@ -31,6 +31,7 @@ import { TituloComponent } from './shared/titulo/titulo.component';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { ptBrLocale } from 'ngx-bootstrap/locale';
 import { LoteService } from './service/lote.service';
+import { NgxCurrencyModule } from 'ngx-currency';
 defineLocale('pt-br', ptBrLocale);
 
 
@@ -49,7 +50,7 @@ defineLocale('pt-br', ptBrLocale);
     EventoListaComponent,
     UserComponent,
     LoginComponent,
-    RegistrationComponent
+    RegistrationComponent,
   ],
   imports: [
     BrowserModule,
@@ -69,7 +70,8 @@ defineLocale('pt-br', ptBrLocale);
       progressBar: true
     }),
     NgxSpinnerModule,
-    BsDatepickerModule.forRoot()
+    BsDatepickerModule.forRoot(),
+    NgxCurrencyModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [EventoService, LoteService],

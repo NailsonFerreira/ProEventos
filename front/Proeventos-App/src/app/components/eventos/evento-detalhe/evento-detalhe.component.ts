@@ -33,7 +33,7 @@ export class EventoDetalheComponent implements OnInit {
     return {
       isAnimated: true,
       adaptivePosition: true,
-      dateInputFormat: 'DD/MM/YYYY hh:mm a',
+      dateInputFormat: 'DD/MM/YYYY hh:mm:ss a',
       containerClass: 'theme-default',
       showWeekNumbers: false
     };
@@ -74,7 +74,7 @@ export class EventoDetalheComponent implements OnInit {
   public carregaEvento(): void {
     this.eventoId = +this.activateRoute.snapshot.paramMap.get('id');
 
-    if (this.eventoId != null || this.eventoId != 0) {
+    if (this.eventoId != null && this.eventoId != 0) {
       this.spinner.show();
       this.eventoService.getEventoById(this.eventoId).subscribe(
         {
@@ -110,8 +110,11 @@ export class EventoDetalheComponent implements OnInit {
   }
 
   adicinaFormLote(): void {
-
     this.lotes.push(this.createFormLote({ id: 0 } as Lote));
+  }
+
+  public getTitulo(titulo:string):string{
+    return titulo==null||titulo===''?"Nome do lote":titulo;
   }
 
   createFormLote(lote: Lote): FormGroup {
@@ -213,11 +216,8 @@ export class EventoDetalheComponent implements OnInit {
     this.modalRef.hide();
   }
 
-  mudaValorData(value: Date, indice: number){
-    this.lotes[indice].dataInicio = value;
+  mudaValorData(value: Date, indice: number, campo:string){
+    this.lotes.value[indice][campo]= value;
   }
 
-  mudaValorDataFim(value: Date, indice: number){
-    this.lotes[indice].dataFim = value;
-  }
 }

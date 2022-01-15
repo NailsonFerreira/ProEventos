@@ -109,6 +109,7 @@
         <div formArrayName="lotes" *ngFor="let lote of lotes.controls; let i=index">
           <fieldset class="form-group" [formGroupName]="i">
             <legend class="d-flex justify-content-between capitalize">
+              {{getTitulo(lotes.get(i+'.nome').value)}}
               <button
                 (click)="removerLote(i, template)"
                 class="p-2 btn btn-sm btn-outline-warning mb-1 d-flex"
@@ -145,22 +146,30 @@
               <input
               [ngClass]="cssValidator(lotes.get(i+'.preco'))"
               type="text"
-               currencyMask class="form-control" formControlName="preco" placeholder="R$ 0,00">
+               currencyMask
+               [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align:'left' }"
+               class="form-control"
+               formControlName="preco"
+               placeholder="R$ 0,00">
             </div>
             <div class="form-group col-md-4">
               <label>Data Início</label>
               <input type="text"
                class="form-control" formControlName="dataInicio" placeholder="01/01/2019" value="{{lotes.get(i+'.dataInicio').value|date: 'dd/MM/yyyy'}}"
                bsDatepicker
-                [bsConfig]="bsConfigLote" (bsValueChange)="mudaValorData($event, i)">
-                {{lotes.get(i+'.dataInicio').value}}
+                [bsConfig]="bsConfigLote" (bsValueChange)="mudaValorData($event, i, 'dataInicio')">
+                {{lotes.get(i+'.dataInicio').value|date:"dd/MM/YYYY"}}
             </div>
             <div class="form-group col-md-4">
               <label>Data Fim</label>
               <input type="text"
-               class="form-control" formControlName="dataFim" placeholder="01/01/2019"  value="{{lotes.get(i+'.dataFim').value|date: 'dd/MM/yyyy'}}"
-               bsDatepicker
-                [bsConfig]="bsConfigLote">
+               class="form-control"
+               formControlName="dataFim"
+               placeholder="01/01/2019"
+               value="{{lotes.get(i+'.dataFim').value|date: 'dd/MM/yyyy'}}"
+               (bsValueChange)="mudaValorData($event, i, 'dataFim')"
+               bsDatepicker>
+               {{lotes.get(i+'.dataFim').value|date:"dd/MM/YYYY"}}
             </div>
           </div>
         </fieldset>
@@ -177,7 +186,7 @@
     <button class="btn btn-outline-secondary mr-auto border">
       Cancelar Alteração
     </button>
-    <button class="btn btn-success" (click)="salvarLotes()">
+    <button class="btn btn-success" [disabled]="!form.controls.lotes.valid" (click)="salvarLotes()">
       Salvar Lotes
     </button>
   </div>
