@@ -1,5 +1,6 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
+import { environment } from '@environments/environment';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
@@ -96,13 +97,19 @@ export class EventoListaComponent implements OnInit {
     ).add(()=>this.spinner.hide());
   }
 
-
-
   decline(): void {
     this.modalRef?.hide();
   }
 
   detalheEvento(id: number):void{
       this.router.navigate([`eventos/detalhe/${id}`]);
+  }
+
+  public getImage(imageUrl:string):string{
+    if(imageUrl != null && imageUrl != ''){
+      return environment.apiURL + 'resources/images/'+ imageUrl;
+    } else{
+      return "assets/images/no-image.png";
+    }
   }
 }

@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnInit } from '@angular/core';
+import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { Evento } from '../models/Evento';
@@ -9,7 +10,7 @@ import { Evento } from '../models/Evento';
 })
 
 export class EventoService {
-  private baseUrl = "http://localhost:5000/evento";
+  private baseUrl = `${environment.apiURL}evento`; //"http://localhost:5000/evento";
   constructor(private http: HttpClient) { }
 
 
@@ -27,14 +28,24 @@ export class EventoService {
   }
 
   post(evento: Evento):Observable<Evento>{
+
     return this.http.post<Evento>(this.baseUrl, evento).pipe(take(1));
   }
 
   put(evento: Evento):Observable<Evento>{
+    console.log("FOI NO PUT "+JSON.stringify(evento));
     return this.http.put<Evento>(`${this.baseUrl}?id=${evento.id}`, evento);//.pipe(take(1));
   }
 
   deleteEvento(id: number): Observable<any> {
     return this.http.delete<any>(`${this.baseUrl}?id=${id}`).pipe(take(1));
+  }
+
+  postUpload(eventoId:number, file:File):Observable<Evento>{
+    const fileToUpload = file[0] as File;
+    const formData = new FormData();
+    formData.append('file',fileToUpload)
+
+    return this.http.post<Evento>(`${this.baseUrl}/upload-image/${eventoId}`, formData ).pipe(take(1));
   }
 }

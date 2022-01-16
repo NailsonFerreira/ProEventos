@@ -1,3 +1,5 @@
+import { environment } from './../../../../environments/environment';
+import { LogUtil } from './../../../util/log-util';
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -24,6 +26,11 @@ export class EventoDetalheComponent implements OnInit {
   eventoId: number;
   modalRef: BsModalRef;
   loteAtual = { id: 0, nome: 0, index: 0 };
+  imageUrl = "assets/images/upload-cloud.png";
+  file: File;
+
+  MIN: number = 25;
+  MAX: number = 1900;
 
   get f(): any {
     return this.form.controls;
@@ -81,6 +88,10 @@ export class EventoDetalheComponent implements OnInit {
           next: (evento: Evento) => {
             this.evento = { ...evento }
             this.form.patchValue(this.evento);
+
+            if (evento.imagemUrl != '') {
+              this.imageUrl = environment.apiURL + 'resources/images/'+ evento.imagemUrl;
+            }
             evento.lotes.forEach(lote => {
               this.lotes.push(this.createFormLote(lote));
             });
@@ -101,8 +112,8 @@ export class EventoDetalheComponent implements OnInit {
       local: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
       dataEvento: ['', [Validators.required]],
       tema: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
-      qtdPessoas: ['', [Validators.required]],
-      imagemUrl: ['', [Validators.required]],
+      qtdPessoas: ['', [Validators.required, Validators.min(this.MIN), Validators.max(this.MAX)]],
+      imagemUrl: ['', []],
       telefone: ['', [Validators.required, Validators.minLength(8)]],
       email: ['', [Validators.required, Validators.email]],
       lotes: this.fb.array([]),
@@ -113,8 +124,8 @@ export class EventoDetalheComponent implements OnInit {
     this.lotes.push(this.createFormLote({ id: 0 } as Lote));
   }
 
-  public getTitulo(titulo:string):string{
-    return titulo==null||titulo===''?"Nome do lote":titulo;
+  public getTitulo(titulo: string): string {
+    return titulo == null || titulo === '' ? "Nome do lote" : titulo;
   }
 
   createFormLote(lote: Lote): FormGroup {
@@ -143,7 +154,7 @@ export class EventoDetalheComponent implements OnInit {
       this.evento = { ...this.form.value };
       let methodName: any = 'post';
 
-      if (this.eventoId != null || this.eventoId != 0) {
+      if (this.eventoId != null && this.eventoId != 0) {
         this.evento.id = this.eventoId;
         methodName = 'put';
       }
@@ -181,7 +192,7 @@ export class EventoDetalheComponent implements OnInit {
   }
 
   setEditMode(): void {
-    if (this.eventoId != null || this.eventoId != 0) {
+    if (this.eventoId != null && this.eventoId != 0) {
       this.isEditMode = true;
     }
   }
@@ -200,24 +211,49 @@ export class EventoDetalheComponent implements OnInit {
     this.spinner.show();
     this.loteService.deleteLote(this.eventoId, this.loteAtual.id).subscribe(
       {
-        next:(response:any)=>{
+        next: (response: any) => {
           this.toast.show('Lote deletado com sucesso', 'Sucesso');
           this.lotes.removeAt(this.loteAtual.index);
         },
-        error:(error:any)=>{
+        error: (error: any) => {
           this.toast.error('Erro ao deletar lote', 'Erro');
           console.error(error);
         }
       }
-    ).add(()=>this.spinner.hide());
+    ).add(() => this.spinner.hide());
   }
 
   cancelaLoteDelete(): void {
     this.modalRef.hide();
   }
 
-  mudaValorData(value: Date, indice: number, campo:string){
-    this.lotes.value[indice][campo]= value;
+  mudaValorData(value: Date, indice: number, campo: string) {
+    this.lotes.value[indice][campo] = value;
   }
 
+  public onFileChange(event: any): void {
+    console.log("onFileChange()" + JSON.stringify(event));
+    const reader = new FileReader();
+    reader.onload = (eventt: any) => this.imageUrl = eventt.target.result;
+
+    this.file = event.target.files;
+    reader.readAsDataURL(this.file[0]);
+
+    this.uploadImage();
+  }
+
+  uploadImage(): void {
+    this.spinner.show();
+    this.eventoService.postUpload(this.eventoId, this.file).subscribe({
+      next: (evento: Evento) => {
+        this.carregaEvento();
+        this.toast.success("Imagem atualizada com sucesso", "Sucesso!");
+        LogUtil.log("uploadImage(): ", evento);
+      },
+      error: (error: any) => {
+        this.toast.error("Erro ao atualizar imagem", "Erro!");
+        LogUtil.log("uploadImage() Erro: ", error);
+      }
+    }).add(() => this.spinner.hide());
+  }
 }
