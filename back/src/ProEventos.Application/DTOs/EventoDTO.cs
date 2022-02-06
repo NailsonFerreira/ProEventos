@@ -28,6 +28,8 @@ namespace ProEventos.Application.DTOs
         EmailAddress(ErrorMessage = "{0} inválido"),
         Display(Name = "E-mail")]
         public string Email { get; set; }
+        public int UserId { get; set; }
+        public UserDTO UserDto { get; set; }
         public IEnumerable<LoteDTO> Lotes { get; set; }
         public IEnumerable<RedeSocialDTO> RedesSociais { get; set; }
         public IEnumerable<PalestranteDTO> PalestrantesEventos { get; set; }

@@ -19,15 +19,17 @@ namespace ProEventos.Application.Services
             this.baseRepository = baseRepository;
             this.mapper = mapper;
         }
-        public async Task<EventoDTO> Add(EventoDTO eventoDto)
+        public async Task<EventoDTO> Add(int userId, EventoDTO eventoDto)
         {
             try
             {
                  var evento = mapper.Map<Evento>(eventoDto);
+                evento.UserId = userId;
+
                 baseRepository.Add<Evento>(evento);
                 if (await baseRepository.SaveChangesAsync())
                 {
-                    var entity = await eventoRepository.GetEventoByIdAsync(evento.Id);
+                    var entity = await eventoRepository.GetEventoByIdAsync(userId, evento.Id);
                     return mapper.Map<EventoDTO>(entity);
                 }
                 return null;
@@ -39,14 +41,17 @@ namespace ProEventos.Application.Services
             }
         }
 
-        public async Task<bool> Delete(int eventoId)
+        public async Task<bool> Delete(int userId, int eventoId)
         {
             try
             {
-                var entity = await eventoRepository.GetEventoByIdAsync(eventoId);
-                if (entity == null) throw new Exception("EventoDTO não encontrado");
-                
-                baseRepository.Delete<Evento>(entity);
+                var evento = await eventoRepository.GetEventoByIdAsync(userId, eventoId);
+                if (evento == null) throw new Exception("EventoDTO não encontrado");
+
+                evento.UserId = userId;
+                evento.Id = eventoId;
+
+                baseRepository.Delete<Evento>(evento);
                 return await baseRepository.SaveChangesAsync();
             }
             catch (Exception e)
@@ -56,11 +61,11 @@ namespace ProEventos.Application.Services
             }
         }
 
-        public async Task<EventoDTO[]> GetAllEventosAsync(bool includePalestrantes = false)
+        public async Task<EventoDTO[]> GetAllEventosAsync(int userId, bool includePalestrantes = false)
         {
             try
             {
-                var eventos = await eventoRepository.GetAllEventosAsync(includePalestrantes);
+                var eventos = await eventoRepository.GetAllEventosAsync(userId, includePalestrantes);
                 if (eventos == null) return null;
                
                 var eventoDTOs = mapper.Map<EventoDTO[]>(eventos);
@@ -74,11 +79,11 @@ namespace ProEventos.Application.Services
             }
         }
 
-        public async Task<EventoDTO[]> GetAllEventosByTemaAsync(string tema, bool includePalestrantes = false)
+        public async Task<EventoDTO[]> GetAllEventosByTemaAsync(int userId, string tema, bool includePalestrantes = false)
         {
             try
             {
-                var eventos = await eventoRepository.GetAllEventosByTemaAsync(tema, includePalestrantes: includePalestrantes);
+                var eventos = await eventoRepository.GetAllEventosByTemaAsync(userId, tema, includePalestrantes: includePalestrantes);
                 if (eventos == null) return null;
 
                  var eventoDTOs = mapper.Map<EventoDTO[]>(eventos);
@@ -92,11 +97,11 @@ namespace ProEventos.Application.Services
             }
         }
 
-        public async Task<EventoDTO> GetEventoByIdAsync(int eventoId, bool includePalestrantes = false)
+        public async Task<EventoDTO> GetEventoByIdAsync(int userId, int eventoId, bool includePalestrantes = false)
         {
             try
             {
-                var evento = await eventoRepository.GetEventoByIdAsync(eventoId, includePalestrantes: includePalestrantes);
+                var evento = await eventoRepository.GetEventoByIdAsync(userId, eventoId, includePalestrantes: includePalestrantes);
                 if (evento == null) return null;
 
                 var eventoDto = mapper.Map<EventoDTO>(evento);
@@ -111,25 +116,27 @@ namespace ProEventos.Application.Services
             }
         }
 
-        public async Task<EventoDTO> Update(int id, EventoDTO eventoDto)
+        public async Task<EventoDTO> Update(int userId, int id, EventoDTO eventoDto)
         {
             try
             {
-                var entity = await eventoRepository.GetEventoByIdAsync(id);
-                if (entity == null) return null;
+                var evento = await eventoRepository.GetEventoByIdAsync(userId, id);
+                if (evento == null) return null;
                 eventoDto.Id = id;
-                mapper.Map(eventoDto, entity);
-                baseRepository.Update<Evento>(entity);
+                eventoDto.UserId = userId;
+
+                mapper.Map(eventoDto, evento);
+                baseRepository.Update<Evento>(evento);
                 if (await baseRepository.SaveChangesAsync())
                 {
-                    var evento = await eventoRepository.GetEventoByIdAsync(id);
-                    return mapper.Map<EventoDTO>(evento);;
+                    var eventoReturn = await eventoRepository.GetEventoByIdAsync(userId, id);
+                    return mapper.Map<EventoDTO>(eventoReturn);;
                 }
+
                 return null;
             }
             catch (Exception e)
             {
-
                 throw new Exception(e.Message);
             }
         }
