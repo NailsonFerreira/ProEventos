@@ -32,7 +32,7 @@ namespace ProEventos.Application.Services
         {
             try
             {
-                var user = await userManager.Users.SingleOrDefaultAsync(x => x.UserName.ToLower() == userUpdateDTO.Username.ToLower());
+                var user = await userManager.Users.SingleOrDefaultAsync(x => x.UserName.ToLower() == userUpdateDTO.UserName.ToLower());
 
                 return await signInManager.CheckPasswordSignInAsync(user, password, false);
             }
@@ -42,7 +42,7 @@ namespace ProEventos.Application.Services
             }
         }
 
-        public async Task<UserDTO> CreateAccountAsync(UserDTO userDTO)
+        public async Task<UserUpdateDTO> CreateAccountAsync(UserDTO userDTO)
         {
             try
             {
@@ -51,7 +51,7 @@ namespace ProEventos.Application.Services
 
                 if (result.Succeeded)
                 {
-                    return mapper.Map<UserDTO>(user);
+                    return mapper.Map<UserUpdateDTO>(user);
                 }
                 return null;
             }
@@ -61,11 +61,11 @@ namespace ProEventos.Application.Services
             }
         }
 
-        public async Task<UserUpdateDTO> GetUserByUsernameAsync(string username)
+        public async Task<UserUpdateDTO> GetUserByUserNameAsync(string userName)
         {
             try
             {
-                var user = await userRepository.GetUserByUsernameAsync(username);
+                var user = await userRepository.GetUserByUserNameAsync(userName);
                 if (user is null) return null;
 
                 return mapper.Map<UserUpdateDTO>(user);
@@ -81,7 +81,7 @@ namespace ProEventos.Application.Services
         {
             try
             {
-                var user = await userRepository.GetUserByUsernameAsync(userUpdateDTO.Username);
+                var user = await userRepository.GetUserByUserNameAsync(userUpdateDTO.UserName);
                 if (user is null) return null;
 
                 mapper.Map(userUpdateDTO, user);
@@ -94,7 +94,7 @@ namespace ProEventos.Application.Services
 
                 if(await userRepository.SaveChangesAsync())
                 {
-                    var userReturn =  await userRepository.GetUserByUsernameAsync(user.UserName);
+                    var userReturn =  await userRepository.GetUserByUserNameAsync(user.UserName);
 
                     return mapper.Map<UserUpdateDTO>(userReturn);
                 }
@@ -106,11 +106,11 @@ namespace ProEventos.Application.Services
             }
         }
 
-        public async Task<bool> UserExists(string username)
+        public async Task<bool> UserExists(string userName)
         {
             try
             {
-                return await userManager.Users.AnyAsync(x => x.UserName.ToLower() == username.ToLower());
+                return await userManager.Users.AnyAsync(x => x.UserName.ToLower() == userName.ToLower());
             }
             catch (Exception e)
             {

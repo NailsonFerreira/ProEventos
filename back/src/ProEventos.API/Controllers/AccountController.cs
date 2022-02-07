@@ -31,8 +31,8 @@ namespace ProEventos.API.Controllers
         {
             try
             {
-                var username = User.GetUserName();
-                var user = await accountService.GetUserByUsernameAsync(username);
+                var userName = User.GetUserName();
+                var user = await accountService.GetUserByUserNameAsync(userName);
                 return Ok(user);
             }
             catch (Exception e)
@@ -48,7 +48,7 @@ namespace ProEventos.API.Controllers
         {
             try
             {
-                if(await accountService.UserExists(userDTO.Username))
+                if(await accountService.UserExists(userDTO.UserName))
                 {
                     return BadRequest("Usuário já existe");
                 }
@@ -56,6 +56,7 @@ namespace ProEventos.API.Controllers
                 var user = await accountService.CreateAccountAsync(userDTO);
                 if(!(user is null))
                 {
+                    user.Token = tokenService.CreateToken(user).Result;
                     return Ok(user);
                 }
 
@@ -73,7 +74,7 @@ namespace ProEventos.API.Controllers
         {
             try
             {
-                var user = await accountService.GetUserByUsernameAsync(User.GetUserName());
+                var user = await accountService.GetUserByUserNameAsync(User.GetUserName());
                 if (user is null) return Unauthorized("Usuario invalido");
 
                 var userReturn = await accountService.UpdateAccount(userDTO);
@@ -97,13 +98,13 @@ namespace ProEventos.API.Controllers
         {
             try
             {
-                var user = await accountService.GetUserByUsernameAsync(userDTO.Username);
+                var user = await accountService.GetUserByUserNameAsync(userDTO.UserName);
                 if (user is null) return Unauthorized("Usuario ou senha incorretos");
 
                 var result = await accountService.CheckUserPasswordAsync(user, userDTO.Password);
                 if(!result.Succeeded) return Unauthorized("Usuario ou senha incorretos");
 
-                return Ok(new { userName = user.Username, primeiroNome =user.PrimeiroNome, token = tokenService.CreateToken(user).Result});
+                return Ok(new { userName = user.UserName, primeiroNome =user.PrimeiroNome, token = tokenService.CreateToken(user).Result});
             }
             catch (Exception e)
             {

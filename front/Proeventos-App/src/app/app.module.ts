@@ -1,16 +1,18 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { defineLocale } from 'ngx-bootstrap/chronos';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { ptBrLocale } from 'ngx-bootstrap/locale';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { NgxCurrencyModule } from 'ngx-currency';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ToastrModule } from 'ngx-toastr';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ContatosComponent } from './components/contatos/contatos.component';
@@ -24,14 +26,14 @@ import { PerfilComponent } from './components/user/perfil/perfil.component';
 import { RegistrationComponent } from './components/user/registration/registration.component';
 import { UserComponent } from './components/user/user.component';
 import { DateTimeFormatPipe } from './helpers/DateTimeFormat.pipe';
+import { JwtInterceptor } from './interceptors/jwt.interceptor';
+import { AccountService } from './service/account.service';
 import { EventoService } from './service/evento.service';
+import { LoteService } from './service/lote.service';
 import { NavComponent } from './shared/nav/nav.component';
 import { TituloComponent } from './shared/titulo/titulo.component';
 
-import { defineLocale } from 'ngx-bootstrap/chronos';
-import { ptBrLocale } from 'ngx-bootstrap/locale';
-import { LoteService } from './service/lote.service';
-import { NgxCurrencyModule } from 'ngx-currency';
+
 defineLocale('pt-br', ptBrLocale);
 
 
@@ -74,7 +76,12 @@ defineLocale('pt-br', ptBrLocale);
     NgxCurrencyModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  providers: [EventoService, LoteService],
+  providers: [
+    EventoService,
+    LoteService,
+    AccountService,
+    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}
+    ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

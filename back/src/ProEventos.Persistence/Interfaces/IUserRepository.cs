@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace ProEventos.Persistence.Interfaces
 {
-    public interface IUserRepository: IProEventoBase
+    public interface IUserRepository : IProEventoBase
     {
         Task<IEnumerable<User>> GetUsersAsync();
         Task<User> GetUserByIdAsync(int id);
-        Task<User> GetUserByUsernameAsync(string username);
+        Task<User> GetUserByUserNameAsync(string userName);
     }
 }
