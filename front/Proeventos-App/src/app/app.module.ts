@@ -20,6 +20,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { EventoDetalheComponent } from './components/eventos/evento-detalhe/evento-detalhe.component';
 import { EventoListaComponent } from './components/eventos/evento-lista/evento-lista.component';
 import { EventosComponent } from './components/eventos/eventos.component';
+import { HomeComponent } from './components/home/home.component';
 import { PalestrantesComponent } from './components/palestrantes/palestrantes.component';
 import { LoginComponent } from './components/user/login/login.component';
 import { PerfilComponent } from './components/user/perfil/perfil.component';
@@ -53,6 +54,7 @@ defineLocale('pt-br', ptBrLocale);
     UserComponent,
     LoginComponent,
     RegistrationComponent,
+    HomeComponent,
   ],
   imports: [
     BrowserModule,

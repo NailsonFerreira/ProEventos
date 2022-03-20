@@ -74,13 +74,17 @@ namespace ProEventos.API.Controllers
         {
             try
             {
+                if (userDTO.UserName != User.GetUserName())
+                    return Unauthorized("Username informado é invalido");
+
                 var user = await accountService.GetUserByUserNameAsync(User.GetUserName());
                 if (user is null) return Unauthorized("Usuario invalido");
 
+     
                 var userReturn = await accountService.UpdateAccount(userDTO);
                 if (!(userReturn is null))
                 {
-                    return Ok(userReturn);
+                    return Ok(new { userName = userReturn.UserName, primeiroNome = userReturn.PrimeiroNome, token = tokenService.CreateToken(userReturn).Result });
                 }
 
                 return BadRequest("Error ao atualizar usuario");

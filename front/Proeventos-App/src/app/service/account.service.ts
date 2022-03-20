@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { User } from '@app/models/identity/user';
+import { UserUpdate } from '@app/models/identity/user-update';
 import { Observable, ReplaySubject } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { environment } from './../../environments/environment';
@@ -49,4 +50,27 @@ export class AccountService {
     this.currentUserSource.next(null);
     this.currentUserSource.complete();
   }
+
+  public hasUserLogged():boolean{
+    return localStorage.getItem("user")!=null;
+  }
+
+  public getCurrentUser():User{
+    let user = JSON.parse(localStorage.getItem("user")) as User;
+    return user;
+  }
+
+  public getUser():Observable<UserUpdate>{
+    return this.http.get<UserUpdate>(this.baseUrl+"getUser").pipe(take(1));
+  }
+
+  public updateUser(user:UserUpdate):Observable<void>{
+    return this.http.put<UserUpdate>(this.baseUrl+"update", user).pipe(
+      take(1),
+      map((user: UserUpdate)=>{
+        this.setCurrentUser(user);
+      })
+    )
+  }
 }
+
